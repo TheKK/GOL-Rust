@@ -20,6 +20,7 @@ impl Cell {
 pub struct World {
     width: i32,
     height: i32,
+    cell_color: Color,
     cells: Vec<Cell>,
 }
 
@@ -35,6 +36,7 @@ impl World {
         World {
             width: width,
             height: height,
+            cell_color: Color::Default,
             cells: cells,
         }
     }
@@ -48,6 +50,10 @@ impl World {
         for cell in &mut self.cells {
             cell.is_alive = rng.gen::<bool>();
         }
+    }
+
+    pub fn cell_color(&mut self, color: Color) {
+        self.cell_color = color;
     }
 
     pub fn update(&mut self) {
@@ -95,7 +101,7 @@ impl World {
                 if cell.is_alive {
                     rustbox.print(x as usize, y as usize,
                                   rustbox::RB_NORMAL,
-                                  Color::White, Color::Default,
+                                  self.cell_color, Color::Default,
                                   "*");
                 }
             }
