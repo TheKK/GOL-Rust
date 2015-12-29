@@ -1,0 +1,13 @@
+[package]
+name = "game_of_life"
+version = "0.1.0"
+authors = ["Ying-Ruei Liang (KK) <thumbd03803@gmail.com>"]
+
+[[bin]]
+name = "gol"
+path = "src/main.rs"
+
+[dependencies]
+rand = "*"
+rustbox = "*"
+time = "*"
