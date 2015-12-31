@@ -73,7 +73,7 @@ impl World {
                 if ((x - 1 >= 0) && (y + 1 < self.height)) && self._cell_is_alive_at(x - 1, y + 1) { cell_surround_num += 1}
                 if ((x - 1 >= 0) && (y - 1 >= 0)) && self._cell_is_alive_at(x - 1, y - 1) { cell_surround_num += 1}
 
-                let mut cell = &mut self.cells[(x + self.width * y) as usize];
+                let mut cell = self.cells.get_mut((x + self.width * y) as usize).unwrap();
                 match cell_surround_num {
                     2 => {
                         cell.next_state = cell.is_alive;
@@ -96,7 +96,7 @@ impl World {
     pub fn render(&self, rustbox: &RustBox) {
         for y in 0..self.height {
             for x in 0..self.width {
-                let cell = &self.cells[(x + y * self.width) as usize];
+                let cell = &self.cells.get((x + y * self.width) as usize).unwrap();
 
                 if cell.is_alive {
                     rustbox.print(x as usize, y as usize,
