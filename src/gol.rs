@@ -9,7 +9,7 @@ pub struct Cell {
 }
 
 impl Cell {
-    pub fn new(alive: bool) -> Cell {
+    fn new(alive: bool) -> Cell {
         Cell {
             is_alive: alive,
             next_state: false,
@@ -50,10 +50,6 @@ impl World {
         for cell in &mut self.cells {
             cell.is_alive = rng.gen::<bool>();
         }
-    }
-
-    pub fn cell_color(&mut self, color: Color) {
-        self.cell_color = color;
     }
 
     pub fn update(&mut self) {
@@ -106,5 +102,50 @@ impl World {
                 }
             }
         }
+    }
+}
+
+pub struct WorldBuilder {
+    width: i32,
+    height: i32,
+    cell_color: Color,
+}
+
+impl WorldBuilder {
+    pub fn new() -> WorldBuilder {
+        WorldBuilder {
+            width: 10,
+            height: 10,
+            cell_color: Color::Default,
+        }
+    }
+
+    pub fn build(&self) -> World {
+        let mut rng = thread_rng();
+        let cells = (0..(self.width * self.height))
+            .map(|_| {
+                Cell::new(rng.gen::<bool>())
+            })
+            .collect();
+
+        World {
+            width: self.width,
+            height: self.height,
+            cell_color: self.cell_color,
+            cells: cells,
+        }
+    }
+
+    pub fn world_size(&mut self, width: i32, height: i32) -> &mut WorldBuilder {
+        self.width = width;
+        self.height = height;
+
+        self
+    }
+
+    pub fn cell_color(&mut self, color: Color) -> &mut WorldBuilder {
+        self.cell_color = color;
+
+        self
     }
 }

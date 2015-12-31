@@ -13,7 +13,7 @@ extern crate clap;
 use clap::{Arg, App};
 
 mod gol;
-use gol::World;
+use gol::{World, WorldBuilder};
 
 fn parse_args<'n, 'a>() -> clap::ArgMatches<'n, 'a> {
     App::new("GOL-Rust")
@@ -49,8 +49,8 @@ fn main() {
         Color::Default
     };
     let speed = if let Some(value) = args.value_of("time speed") {
-        if let Ok(value_i32) = value.trim().parse::<i32>() {
-            Duration::milliseconds(value_i32 as i64)
+        if let Ok(value_i32) = value.trim().parse::<i64>() {
+            Duration::milliseconds(value_i32)
         } else {
             Duration::milliseconds(100)
         }
@@ -58,9 +58,10 @@ fn main() {
         Duration::milliseconds(100)
     };
     let rustbox = RustBox::init(Default::default()).unwrap();
-    let mut world = World::new(rustbox.width() as i32, rustbox.height() as i32);
-
-    world.cell_color(cell_color);
+    let mut world = WorldBuilder::new()
+        .world_size(rustbox.width() as i32, rustbox.height() as i32)
+        .cell_color(cell_color)
+        .build();
 
     loop {
         rustbox.clear();
