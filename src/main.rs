@@ -35,15 +35,8 @@ fn parse_args<'n, 'a>() -> clap::ArgMatches<'n, 'a> {
 
 fn main() {
     let args = parse_args();
-    let mut cell_color = Color::Default;
-    let mut speed = Duration::milliseconds(100);
-    if let Some(value) = args.value_of("time speed") {
-        if let Ok(s) = value.trim().parse::<i32>() {
-            speed = Duration::milliseconds(s as i64);
-        }
-    }
-    if let Some(color) = args.value_of("cell color") {
-        cell_color = match color {
+    let cell_color = if let Some(c) = args.value_of("cell color") {
+        match c {
             "red" => Color::Red,
             "blue" => Color::Blue,
             "green" => Color::Green,
@@ -51,12 +44,20 @@ fn main() {
             "black" => Color::Black,
             "yellow" => Color::Yellow,
             _ => Color::Default,
-        } 
+        }
+    } else {
+        Color::Default
     };
-    let rustbox = match RustBox::init(Default::default()) {
-        Result::Ok(v) => v,
-        Result::Err(e) => panic!("{}", e),
+    let speed = if let Some(value) = args.value_of("time speed") {
+        if let Ok(value_i32) = value.trim().parse::<i32>() {
+            Duration::milliseconds(value_i32 as i64)
+        } else {
+            Duration::milliseconds(100)
+        }
+    } else {
+        Duration::milliseconds(100)
     };
+    let rustbox = RustBox::init(Default::default()).unwrap();
     let mut world = World::new(rustbox.width() as i32, rustbox.height() as i32);
 
     world.cell_color(cell_color);
