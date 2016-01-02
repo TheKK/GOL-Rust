@@ -73,13 +73,13 @@ impl World {
                 match cell_surround_num {
                     2 => {
                         cell.next_state = cell.is_alive;
-                    }
+                    },
                     3 => {
                         cell.next_state = true;
-                    }
+                    },
                     _ => {
                         cell.next_state = false;
-                    }
+                    },
                 }
             }
         }
