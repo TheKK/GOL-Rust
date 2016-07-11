@@ -61,7 +61,7 @@ fn main() {
         .cell_token(cell_token)
         .build();
 
-    loop {
+    'game_loop: loop {
         rustbox.clear();
 
         world.render(&rustbox);
@@ -72,12 +72,8 @@ fn main() {
         match rustbox.peek_event(refresh_speed, false) {
             Ok(rustbox::Event::KeyEvent(Key::Char(key))) => {
                 match key {
-                    'q' => {
-                        break;
-                    }
-                    'r' => {
-                        world.reset();
-                    }
+                    'q' => break 'game_loop,
+                    'r' => world.reset(),
                     _ => {}
                 }
             }
